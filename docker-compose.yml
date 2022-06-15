@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+    httpd:
+        build: ./docker/httpd
+        container_name: httpd
+        ports:
+            - 8000:80
+        volumes:
+            - ./:/var/www/html
+        networks:
+            - httpdphpfpm
+
+    phpfpm:
+        build: ./
+        container_name: phpfpm
+        ports:
+            - 9000
+        volumes:
+            - ./:/var/www/html
+        extra_hosts:
+            - host.docker.internal:host-gateway
+        networks:
+            - httpdphpfpm
+
+networks:
+    httpdphpfpm:
+        name: httpdphpfpm
+        driver: bridge
